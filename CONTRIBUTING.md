@@ -41,6 +41,7 @@ docs/vhire-1-readme-setup
   .venv\Scripts\ruff.exe check app tests
   ```
   A PR opened with a failing check is not ready for review — fix first, then open.
+  [.github/workflows/ci.yml](.github/workflows/ci.yml) runs the same two checks automatically on every PR — treat a red run the same as a failing local check, not something the review can wave through.
 - Force-pushes to a PR branch to address review feedback are fine; force-pushes to `main` are never acceptable from anyone.
 - Draft PRs are welcome for early feedback but must be marked ready-for-review explicitly before the Lead Architect is expected to review them.
 
@@ -55,4 +56,4 @@ docs/vhire-1-readme-setup
 ## Open Questions
 
 - Should PR review be required to come from someone other than the story's author once the team grows beyond the Lead Architect + one contributor, or does the Lead Architect remain the sole reviewer regardless of team size?
-- Does this project want CI (automated `pytest`/`ruff` on PR open) wired up, or is the local pre-PR check sufficient given the team size? Revisit once GitHub Actions or equivalent is in scope.
+- [.github/workflows/ci.yml](.github/workflows/ci.yml) now runs `ruff`/`pytest` on every PR into `main` — currently informational only (no branch protection rule requires it to pass before merge). Decide whether to turn that into a required check once the team is ready to treat a red CI run as a hard merge blocker.
