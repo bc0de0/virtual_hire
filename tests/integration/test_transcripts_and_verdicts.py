@@ -37,6 +37,7 @@ async def seed(conn: asyncpg.Connection) -> dict[str, uuid.UUID]:
     org_id = uuid.uuid4()
     hr_user_id = uuid.uuid4()
     requisition_id = uuid.uuid4()
+    other_requisition_id = uuid.uuid4()
     candidate_id = uuid.uuid4()
     resume_id = uuid.uuid4()
     other_resume_id = uuid.uuid4()
@@ -57,12 +58,13 @@ async def seed(conn: asyncpg.Connection) -> dict[str, uuid.UUID]:
     await conn.execute(
         """
         INSERT INTO job_requisitions (id, organization_id, title, owner_hr_user_id, status, scorecard_template)
-        VALUES ($1, $2, 'Engineer', $3, 'open', $4::jsonb)
+        VALUES ($1, $2, 'Engineer', $3, 'open', $4::jsonb), ($5, $2, 'Other Role', $3, 'open', $4::jsonb)
         """,
         requisition_id,
         org_id,
         hr_user_id,
         json.dumps({"fields": []}),
+        other_requisition_id,
     )
     await conn.execute(
         """
@@ -85,7 +87,7 @@ async def seed(conn: asyncpg.Connection) -> dict[str, uuid.UUID]:
     await conn.execute(
         """
         INSERT INTO applications (id, organization_id, candidate_id, job_requisition_id, resume_id, status)
-        VALUES ($1, $2, $3, $4, $5, 'submitted'), ($6, $2, $3, $4, $7, 'submitted')
+        VALUES ($1, $2, $3, $4, $5, 'submitted'), ($6, $2, $3, $7, $8, 'submitted')
         """,
         application_id,
         org_id,
@@ -93,6 +95,7 @@ async def seed(conn: asyncpg.Connection) -> dict[str, uuid.UUID]:
         requisition_id,
         resume_id,
         other_application_id,
+        other_requisition_id,
         other_resume_id,
     )
     await conn.execute(
