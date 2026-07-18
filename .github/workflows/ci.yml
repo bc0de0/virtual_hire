@@ -29,6 +29,16 @@ jobs:
       - name: Lint (ruff)
         run: ruff check app tests
 
+      - name: Create an empty .env for docker compose config resolution
+        # docker-compose.yml's api/worker services declare `env_file: .env`.
+        # .env is gitignored and never exists on the runner; some compose
+        # subcommands (`down` in particular) fully resolve every service's
+        # config regardless of which service names are passed as arguments,
+        # so a missing .env fails even when api/worker are never started.
+        # An empty file is enough - those two services never actually run
+        # in CI, so there's nothing real for them to read from it anyway.
+        run: touch .env
+
       - name: Start Postgres and Redis (docker compose, --wait for their healthchecks)
         run: docker compose up -d --wait postgres redis
 
@@ -56,9 +66,4 @@ jobs:
 
       - name: Tear down docker compose services
         if: always()
-        # Scoped to just the services this workflow started - a bare
-        # `docker compose down` resolves the whole compose file, including
-        # `api`/`worker`, which declare `env_file: .env`; `.env` is
-        # gitignored and doesn't exist on the runner, which fails config
-        # resolution for services we never started in the first place.
-        run: docker compose down -v postgres redis qdrant
+        run: docker compose down -v
