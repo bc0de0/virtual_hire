@@ -202,3 +202,13 @@ Before touching any docs, asked four clarifying questions given the scale and le
 **CHANGELOG.md** — added an `[Unreleased]` entry recording the full pivot and every file it touched.
 
 No application code was written or modified in this session, per the prompt's explicit scope ("the docs and the epic.md").
+
+---
+
+## 2026-07-16 — Save Claude Code token optimization prompt for future use
+
+**Prompt:**
+> save the claude code token optimization prompt in a permenant file for now and later use in a md file in root called optimization.md
+
+**Response summary:**
+The user's ask referenced "the Claude Code token optimization prompt" without prior context in this conversation, memory, or the repo, so asked where the content should come from rather than guessing; the user pointed to `claude-code-token-optimization-prompt.md` in their Downloads folder. Read that file and saved it verbatim to `optimization.md` at the project root — a reusable bootstrap prompt (for this or future projects) that has Claude Code build a `.claude/context/` layer (symbol index, dependency matrix, object map, decisions log, session log) and install standing token-discipline operating rules (prefer index/grep over full-file reads, diff-only review, incremental re-indexing, capped session logs). No other files were changed.
