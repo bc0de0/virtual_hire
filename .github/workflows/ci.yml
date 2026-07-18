@@ -56,4 +56,9 @@ jobs:
 
       - name: Tear down docker compose services
         if: always()
-        run: docker compose down -v
+        # Scoped to just the services this workflow started - a bare
+        # `docker compose down` resolves the whole compose file, including
+        # `api`/`worker`, which declare `env_file: .env`; `.env` is
+        # gitignored and doesn't exist on the runner, which fails config
+        # resolution for services we never started in the first place.
+        run: docker compose down -v postgres redis qdrant
